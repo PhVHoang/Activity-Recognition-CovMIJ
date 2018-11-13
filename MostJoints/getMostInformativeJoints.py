@@ -39,7 +39,8 @@ def matrixJoints(X,Y,Z):
 def varianceJoints(segmentedMatrixJoints):
     """
     Calculate variance in segmented matrixJoints
-    :param segmentedMatrixJoints: a segmentation of matrixJoints
+    :param
+    segmentedMatrixJoints: a segmentation of matrixJoints
     :return:
         variance
     """
@@ -53,8 +54,14 @@ def varianceJoints(segmentedMatrixJoints):
 
 def listVarianceJoints(segmentedMatrixJoints):
     """
-    Get information of each joint in a sequence action (aka a sequence skeletal)
+    Get information of each joint in a sequence action (aka a sequence skeletal
     :param segmentedMatrixJoints:
     :return:
+        listVariance
     """
-
+    listVariance = np.zeros(0)
+    i = 0
+    while (i < 60): # 60 = 3*nJoints
+        listVariance = np.append(listVariance, varianceJoints(segmentedMatrixJoints[:, i:i+2]))
+        i += 3
+    return listVariance
