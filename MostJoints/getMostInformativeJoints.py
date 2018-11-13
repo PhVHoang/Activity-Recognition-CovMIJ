@@ -1,5 +1,6 @@
 import os
 import numpy as np
+import math
 
 def getIndex(Fk, N):
 
@@ -35,6 +36,25 @@ def matrixJoints(X,Y,Z):
         A[t] = coordinatorJoint
     return A
 
+def varianceJoints(segmentedMatrixJoints):
+    """
+    Calculate variance in segmented matrixJoints
+    :param segmentedMatrixJoints: a segmentation of matrixJoints
+    :return:
+        variance
+    """
 
+    meanSegmentedMatrixJoints = np.mean(segmentedMatrixJoints)
+    variance = 0
+    for i in range(segmentedMatrixJoints.shape[0]):
+        variance = variance + math.sqrt(np.sum((segmentedMatrixJoints[i, :] - meanSegmentedMatrixJoints)**2))
+    variance = variance/(segmentedMatrixJoints.shape[0]-1)
+    return variance
 
+def listVarianceJoints(segmentedMatrixJoints):
+    """
+    Get information of each joint in a sequence action (aka a sequence skeletal)
+    :param segmentedMatrixJoints:
+    :return:
+    """
 
