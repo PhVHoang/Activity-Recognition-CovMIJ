@@ -3,6 +3,10 @@ import numpy as np
 import math
 
 def getIndex(Fk, N):
+    """
+    This method is equivalent to this bellow formula :
+        SMIJ = {{idof(sort(fk), n}}
+    """
     listIndex = Fk.argsort()
     listIndex = np.flip(listIndex)
     listIndex = listIndex[0:N]
@@ -67,5 +71,27 @@ def listVarianceJoints(segmentedMatrixJoints):
         listVariance = np.append(listVariance, varianceJoints(segmentedMatrixJoints[:, i:i+2]))
         i += 3
     return listVariance
+
+def segmentJoints(matrixJoints, Ns, N):
+    m, n= matrixJoints.shape()
+    listSegment = np.zeros(0)
+    widthNs = round(m/Ns)
+    if (widthNs == m):
+        listSegment = getIndex(listVarianceJoints(matrixJoints), N)
+    else:
+        for i in range(Ns):
+            if (i==Ns-1):
+                listSegment = np.append(getIndex(listVarianceJoints(matrixJoints[widthNs*i:m]), N))
+            else:
+                listSegment = np.append(getIndex(listVarianceJoints(matrixJoints[widthNs*i:widthNs*(i+1)]), N))
+    return listSegment
+
+
+def getMostJoints():
+
+    # TODO
+
+    pass
+
 
 
