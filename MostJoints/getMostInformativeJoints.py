@@ -3,8 +3,10 @@ import numpy as np
 import math
 
 def getIndex(Fk, N):
-
-    return None
+    listIndex = Fk.argsort()
+    listIndex = np.flip(listIndex)
+    listIndex = listIndex[0:N]
+    return listIndex
 
 # Create a matrix to represent each joint (from 1st-joint to Jth-joint)
 def matrixJoints(X,Y,Z):
@@ -65,3 +67,5 @@ def listVarianceJoints(segmentedMatrixJoints):
         listVariance = np.append(listVariance, varianceJoints(segmentedMatrixJoints[:, i:i+2]))
         i += 3
     return listVariance
+
+
