@@ -87,11 +87,7 @@ def segmentJoints(matrixJoints, Ns, N):
     return listSegment
 
 
-def getMostJoints():
-
-    # TODO
-
-    pass
-
-
-
+def getMostJoints(X,Y,Z, Ns, N):
+    matJoints = matrixJoints(X, Y, Z)
+    listMostJoints = segmentJoints(matJoints, Ns, N)
+    return listMostJoints
