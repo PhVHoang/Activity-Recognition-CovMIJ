@@ -32,6 +32,13 @@ def getValueMatrix(sizeMatrix):
     getMatrixIndex = getMatrixIndex.astype(np.uint8)
     return getMatrixIndex
 
-def getIdxMostJoints(matrixJoints):
+def getIdxMostJoints(matrixJoints, onf):
+    listAngle = np.unique(matrixJoints)
+    listValueAngle = np.zeros(listAngle.shape[0])
+    for i in range(listAngle.shape[0]):
+        listValueAngle[i] =  np.sum(np.sum(matrixJoints == listAngle[i]))
 
-    return None
+    ind = np.argsort(listValueAngle)
+    listIndex = ind[0:onf]
+    return listIndex
+
