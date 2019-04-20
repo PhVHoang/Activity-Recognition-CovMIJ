@@ -43,6 +43,7 @@ def matrixJoints(X,Y,Z):
 
 def varianceJoints(segmentedMatrixJoints):
     """
+    variance of joints will be used to get the most informative joints by calculating histogram
     Calculate variance in segmented matrixJoints
     :param
     segmentedMatrixJoints: a segmentation of matrixJoints
@@ -59,7 +60,7 @@ def varianceJoints(segmentedMatrixJoints):
 
 def listVarianceJoints(segmentedMatrixJoints):
     """
-    Get information of each joint in a sequence action (aka a sequence skeletal
+    Get information of each joint in a sequence action (aka a sequence skeletal)
     :param segmentedMatrixJoints:
     :return:
         listVariance
@@ -90,3 +91,4 @@ def getMostJoints(X,Y,Z, Ns, N):
     matJoints = matrixJoints(X, Y, Z)
     listMostJoints = segmentJoints(matJoints, Ns, N)
     return listMostJoints
+

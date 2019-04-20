@@ -13,3 +13,5 @@ NUMBER_OF_LEVELS = 3
 OVERLAP = True
 TIMEVAR = False
 
+Ns = [4,8,12]
+

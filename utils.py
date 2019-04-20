@@ -24,6 +24,10 @@ def getActionSubject(filename):
 # get index of upper Covariance Matrix
 
 def getValueMatrix(sizeMatrix):
+    """
+    :param sizeMatrix: size of matrix A (which represents all skeleton coordinators)
+    :return: half of covariance matrix indexes
+    """
     getMatrixIndex = np.zeros(0)
     tmp = sizeMatrix
     for i in range(sizeMatrix):

@@ -9,5 +9,5 @@ def normCord(cord):
 def normSeT(T):
     minT = np.min(T)
     maxT = np.max(T)
-    normT = (T - minT)/(maxT - minT)
+    normT = (T - minT)/(maxT - minT + 1e-5)
     return normT
