@@ -1,8 +1,6 @@
-import numpy as np
 from norm import *
 from utils import *
 from MostJoints.getMostInformativeJoints import *
-import math
 
 def calculateCovarianceMats(X, Y, Z, T, nLevels, overlap = False, timeVar=True):
     nFrames = X.shape[0]
@@ -22,9 +20,9 @@ def calculateCovarianceMats(X, Y, Z, T, nLevels, overlap = False, timeVar=True):
     normT = normSeT(T)
 
     # Create a list of full covariance matrixes
-
     fullCovMats = [[] for i in range(nLevels)]
     covMats = [[] for i in range(nLevels)]
+
     if timeVar:
         sizeMatrix = nJoins*3+1
     else:
