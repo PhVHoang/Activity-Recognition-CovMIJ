@@ -72,7 +72,7 @@ def listVarianceJoints(segmentedMatrixJoints):
         i += 3
     return listVariance
 
-def segmentJoints(matrixJoints, Ns, N):
+def fucksegmentJoints(matrixJoints, Ns, N):
     m, n= matrixJoints.shape
     listSegment = np.zeros(0)
     widthNs = round(m/Ns)
@@ -88,7 +88,16 @@ def segmentJoints(matrixJoints, Ns, N):
 
 
 def getMostJoints(X,Y,Z, Ns, N):
-    matJoints = matrixJoints(X, Y, Z)
-    listMostJoints = segmentJoints(matJoints, Ns, N)
+    """
+
+    :param X: x-axis coordinator
+    :param Y: y-axis coordinator
+    :param Z: z-axis coordinator
+    :param Ns:
+    :param N:
+    :return:
+    """
+    matJoints = matrixJoints(X, Y, Z) # aka matrix A of shape (N, 3*nJoints)
+    listMostJoints = fucksegmentJoints(matJoints, Ns, N)
     return listMostJoints
 

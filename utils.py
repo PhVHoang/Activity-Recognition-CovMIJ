@@ -16,9 +16,9 @@ def getActionLabel(filename):
 
 def getActionSubject(filename):
     with open(filename, "r") as f:
-        action_labels = f.readlines()
-    action_labels = [int(x.strip()[5:7]) for x in action_labels]
-    return action_labels
+        action_subjects = f.readlines()
+    action_subjects = [int(x.strip()[5:7]) for x in action_subjects]
+    return action_subjects
 
 # sizeMatrix = N
 # get index of upper Covariance Matrix
