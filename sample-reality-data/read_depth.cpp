@@ -15,8 +15,15 @@ static Mat create_depth_vis(Mat depth){
 		string name = "frame_";
 		string type = ".jpg";
 		string folder = "frame";
-			
-		ss<<folder<<"/"<<name<<frame_count<<type;
+		if (frame_count < 10) {
+			ss<<folder<<"/"<<name<<"00"<<frame_count<<type;
+		}
+		else if (frame_count>=10 && frame_count < 100) {
+			ss<<folder<<"/"<<name<<"0"<<frame_count<<type;
+		}
+		else 
+			ss<<folder<<"/"<<name<<frame_count<<type;
+		
 		string fullPath = ss.str();
 		ss.str("");
 		
