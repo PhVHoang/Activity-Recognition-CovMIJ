@@ -4,10 +4,23 @@
 
 #include<bits/stdc++.h>
 #include<opencv2/opencv.hpp>
+#include<sstream>
+
 using namespace std;
 using namespace cv;
 
 static Mat create_depth_vis(Mat depth){
+		static int frame_count = 0;
+		stringstream ss;
+		string name = "frame_";
+		string type = ".jpg";
+		string folder = "frame";
+			
+		ss<<folder<<"/"<<name<<frame_count<<type;
+		string fullPath = ss.str();
+		ss.str("");
+		
+		frame_count += 1;
 		Mat gray(depth.size(), CV_8UC1);
 		gray.setTo(0);
 		Mat vis(depth.size(), CV_8UC3);
@@ -23,7 +36,8 @@ static Mat create_depth_vis(Mat depth){
 
 		applyColorMap(gray, vis, COLORMAP_JET);
 		imshow("vis_depth", vis);
-		waitKey(1);
+		waitKey(5);
+		imwrite(fullPath, vis);
 		return vis;
 	}
 
