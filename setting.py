@@ -1,7 +1,7 @@
 # fixed file paths
-ACTION_SET  = ['actionsets/ActionSet1.txt', 'actionsets/ActionSet2.txt', 'actionsets/ActionSet3.txt']
+ACTION_SETS  = ['actionsets/ActionSet1.txt', 'actionsets/ActionSet2.txt', 'actionsets/ActionSet3.txt']
 DATA_PATH   = 'data/'
-ACTION_NAME = ['Wave','Hammer','Smash','Catch','Forward Punch','Throw','Draw X','Draw Tick','Draw ',
+ACTION_NAMES = ['Wave','Hammer','Smash','Catch','Forward Punch','Throw','Draw X','Draw Tick','Draw ',
                'Circle','Clapping Hand','Two hand Wave','Side Boxing','Bend','Forward Kick','Side Kick','Jogging',
                'Tennis Swing','Tennis Serve','Golf Swing','Pickup&throw']
 

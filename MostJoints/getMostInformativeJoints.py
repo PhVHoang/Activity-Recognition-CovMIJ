@@ -73,7 +73,7 @@ def listVarianceJoints(segmentedMatrixJoints):
     return listVariance
 
 def segmentJoints(matrixJoints, Ns, N):
-    m, n= matrixJoints.shape()
+    m, n= matrixJoints.shape
     listSegment = np.zeros(0)
     widthNs = round(m/Ns)
     if (widthNs == m):
