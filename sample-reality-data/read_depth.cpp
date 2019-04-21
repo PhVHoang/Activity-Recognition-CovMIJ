@@ -15,7 +15,8 @@ static Mat create_depth_vis(Mat depth){
 		for (int i = 0; i < depth.rows;i++)
 		for (int j = 0; j < depth.cols; j++)
 		{
-			UINT16 val = depth.at<UINT16>(i,j);
+			// UINT16 val = depth.at<UINT16>(i,j);
+			int val = depth.at<int>(i,j);
 			char gray_val = 255-val >> 8;
 			gray.at<char>(i, j) = gray_val;
 		}
