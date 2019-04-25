@@ -1,8 +1,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib
 import os
 import cv2
 from scipy.ndimage.filters import gaussian_filter
+matplotlib.use('Agg')
 
 def make_subtracted_mean(image_path, image_list):
     subtracted_means = []
