@@ -10,7 +10,6 @@ def calculateCovarianceMats(X, Y, Z, T, nLevels, overlap = False, timeVar=True):
     assert T.shape[0] == nFrames
     assert Y.shape[1] == nJoins
     assert Z.shape[1] == nJoins
-    assert T.shape[1] == 1
 
     # Normalize skeleton coordinators
 
@@ -31,8 +30,8 @@ def calculateCovarianceMats(X, Y, Z, T, nLevels, overlap = False, timeVar=True):
     listIdxMatrix = getValueMatrix(sizeMatrix) # get half of covariance matrix indexes
 
 
-    for l in range(nLevels):
-        # Compute covariance matrixes for each level
+    for l in range(1,nLevels+1):
+        # Compute covariance matrices for each level
         nofMats = 2**(l-1)
         sizeWindow = 1/nofMats
         stepWindow = sizeWindow
@@ -45,7 +44,8 @@ def calculateCovarianceMats(X, Y, Z, T, nLevels, overlap = False, timeVar=True):
         for i in range(len(startFrameTimes)):
             startTime = startFrameTimes[i]
             endTime = startFrameTimes[i] + sizeWindow + 2*np.finfo(float).eps
-            sliceInds = [normT[i] for i in range(T.shape[0]) if normT[i] >= startTime and normT[i] < endTime]
+            # Temporarily fixed
+            sliceInds = [i for i in range(T.shape[0]) if normT[i] >= startTime and normT[i] < endTime]
             sliceX = normX[sliceInds, :]
             sliceY = normY[sliceInds, :]
             sliceZ = normZ[sliceInds, :]
