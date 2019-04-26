@@ -1,71 +1,53 @@
-from norm import *
-from utils import *
-from MostJoints.getMostInformativeJoints import *
+from calculateCovarianceMats import *
+import sklearn
+from sklearn.multiclass import OneVsRestClassifier
+import setting
+
+def sort_and_keep_indexes(Ns, numOfJoints):
+    Ns = sorted(range(len(Ns)), key = Ns.__getitem__)
+    Ns = Ns[len(Ns)-numOfJoints:]
+    return Ns
+
+def get_idx_mostJoints_for_each_action(train_mostInformativeJointsList, action_label):
+    action = train_mostInformativeJointsList[action_label]
+    Ns_4 = [0 for i in range(20)]
+    Ns_8 = [0 for i in range(20)]
+    Ns_12 = [0 for i in range(20)]
+
+    for i in range(len(action)):
+        for j in range(0, 12):
+            if j < 4:
+                Ns_4[action[i][j] - 1] += 1
+            if j < 8:
+                Ns_8[action[i][j] - 1] += 1
+            if j < 12:
+                Ns_12[action[i][j] - 1] += 1
+    Ns_4 = np.asarray(sort_and_keep_indexes(Ns_4, 4))
+    Ns_8 = np.asarray(sort_and_keep_indexes(Ns_8, 8))
+    Ns_12 = np.asarray(sort_and_keep_indexes(Ns_12, 12))
+    return Ns_4, Ns_8, Ns_12
 
 
-def calculateCovarianceMat(X, Y, Z, T, nLevels, overlap=False, timeVar=True):
-    nFrames = X.shape[0]
-    nJoins = X.shape[1]
-    assert Y.shape[0] == nFrames
-    assert Z.shape[0] == nFrames
-    assert T.shape[0] == nFrames
-    assert Y.shape[1] == nJoins
-    assert Z.shape[1] == nJoins
+def get_MIJ_matrices(Ns_list, filename):
+    action_label = int(filename[1:3]) - 1
 
-    # Normalize skeleton coordinators
+    with open('data/' + filename, 'r') as f:
+        skeleton_matrix = [line.rstrip('\n') for line in f]
+    for j in range(len(skeleton_matrix)):
+        skeleton_matrix[j] = [float(coord) for coord in skeleton_matrix[j].split(' ')]
 
-    normX = normCord(X)
-    normY = normCord(Y)
-    normZ = normCord(Z)
-    normT = normSeT(T)
+    skeleton_matrix = np.asarray(skeleton_matrix)
+    noFrames = int(skeleton_matrix.shape[0] / setting.NUMBER_OF_JOINTS)
+    x = skeleton_matrix[:, 0]
+    y = skeleton_matrix[:, 1]
+    z = skeleton_matrix[:, 2]
 
-    # Create a list of full covariance matrixes
-    fullCovMats = [[] for i in range(nLevels)]
-    covMats = [[] for i in range(nLevels)]
-
-    if timeVar:
-        sizeMatrix = nJoins * 3 + 1
-    else:
-        sizeMatrix = nJoins * 3
-
-    listIdxMatrix = getValueMatrix(sizeMatrix)  # get half of covariance matrix indexes
-
-    for l in range(1, nLevels + 1):
-        # Compute covariance matrices for each level
-        nofMats = 2 ** (l - 1)
-        sizeWindow = 1 / nofMats
-        stepWindow = sizeWindow
-        if overlap:
-            stepWindow = stepWindow / 2
-            nofMats = nofMats * 2 - 1
-        startFrameTimes = [stepWindow * i for i in range(nofMats)]
-        fullCovMats[l - 1] = [[] for i in range(nofMats)]
-        covMats[l - 1] = [[] for i in range(nofMats)]
-        for i in range(len(startFrameTimes)):
-            startTime = startFrameTimes[i]
-            endTime = startFrameTimes[i] + sizeWindow + 2 * np.finfo(float).eps
-            sliceInds = [i for i in range(T.shape[0]) if normT[i] >= startTime and normT[i] < endTime]
-            sliceX = normX[sliceInds, :]
-            sliceY = normY[sliceInds, :]
-            sliceZ = normZ[sliceInds, :]
-            sliceT = normT[sliceInds]
-            if not timeVar:
-                sliceVars = np.concatenate((np.concatenate((sliceX, sliceY), axis=1), sliceZ), axis=1)
-            else:
-                sliceVars = np.concatenate(
-                    (np.concatenate((sliceX, sliceY), axis=1), np.concatenate((sliceZ, sliceT), axis=1)), axis=1)
-            covarianceMat = np.cov(sliceVars.T)
-            print(covarianceMat.shape)
-            fullCovMats[l - 1][i] = covarianceMat
-            # Get half of covarianceMat and save it as a vector (1-D matrix)
-            one_half_vector = []
-            mask = np.zeros_like(covarianceMat, dtype=np.bool)
-            mask[np.triu_indices_from(mask)] = True
-            for row in range(covarianceMat.shape[0]):
-                for column in range(covarianceMat.shape[0]):
-                    if mask[row][column] == True:
-                        one_half_vector.append(covarianceMat[row][column])
-            covMats[l - 1][i] = one_half_vector
-
-    return fullCovMats, covMats
+    x = x.reshape(setting.NUMBER_OF_JOINTS, int(skeleton_matrix.shape[0] / setting.NUMBER_OF_JOINTS))
+    y = y.reshape(setting.NUMBER_OF_JOINTS, int(skeleton_matrix.shape[0] / setting.NUMBER_OF_JOINTS))
+    z = z.reshape(setting.NUMBER_OF_JOINTS, int(skeleton_matrix.shape[0] / setting.NUMBER_OF_JOINTS))
+    t = np.arange(1, noFrames + 1)
+    x = x[Ns_list[action_label]]
+    y = y[Ns_list[action_label]]
+    z = z[Ns_list[action_label]]
+    return x, y, z, t
 
