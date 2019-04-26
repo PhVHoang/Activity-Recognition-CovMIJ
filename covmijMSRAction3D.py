@@ -51,3 +51,4 @@ def get_MIJ_matrices(Ns_list, filename):
     z = z[Ns_list[action_label]]
     return x, y, z, t
 
+# training...
