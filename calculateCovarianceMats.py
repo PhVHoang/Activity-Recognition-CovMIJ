@@ -31,7 +31,7 @@ def calculateCovarianceMat(X, Y, Z, T, nLevels, overlap=False, timeVar=True):
     listIdxMatrix = getValueMatrix(sizeMatrix)  # get half of covariance matrix indexes
 
     for l in range(1, nLevels + 1):
-        # Compute covariance matrixes for each level
+        # Compute covariance matrices for each level
         nofMats = 2 ** (l - 1)
         sizeWindow = 1 / nofMats
         stepWindow = sizeWindow
