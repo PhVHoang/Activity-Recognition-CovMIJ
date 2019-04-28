@@ -17,16 +17,29 @@ def make_subtracted_mean(image_path, image_list):
     # print(len(subtracted_means))
     saved_depth_info = np.asarray(saved_depth_info)
     subtracted_means = np.asarray(subtracted_means)
-    filtered_mean = gaussian_filter(subtracted_means, gamma=7)
+    filtered_mean = gaussian_filter(subtracted_means, sigma=7)
     np.save('filtered_mean.npy', filtered_mean)
-    np.save('saved_depth_info.npy', saved_depth_info)
-    fig = plt.figure(figsize=(16,10))
-    plt.plot(filtered_mean)
-    fig.savefig('filtered_mean.jpg')
+    # np.save('saved_depth_info.npy', saved_depth_info)
+    # fig = plt.figure(figsize=(16,10))
+    # plt.plot(filtered_mean)
+    # fig.savefig('filtered_mean.jpg')
+    return filtered_mean
+
+def segment(filtered_mean):
+    #end_frame = 2250
+    min_at_segment = []
+    frame_count = 0
+    while frame_count < len(filtered_mean) - 250:
+        min_frame = filtered_mean[frame_count:frame_count+250]
+        min_at_segment.append(min_frame)
+        frame_count += 250
+    return min_at_segment
 
 
 if __name__=="__main__":
     image_path = 'frame/'
     image_list = os.listdir(image_path)
     image_list = sorted(image_list)
-    make_subtracted_mean(image_path, image_list)
+    filtered_mean = make_subtracted_mean(image_path, image_list)
+    min_at_segment = segment(filtered_mean)
+    print(min_at_segment)
