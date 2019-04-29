@@ -1,5 +1,4 @@
 import numpy as np
-import os
 import cv2
 
 video_name = 'color.avi'
@@ -25,9 +24,9 @@ while(cap.isOpened()):
     out.write(frame)
 
     cv2.imshow('frame', frame)
-    cv2.waitKey(10)
+    cv2.waitKey(5)
 
-    if 0xFF == ord('q'):
+    if cv2.waitKey(5) and 0xFF == ord('q'):
         break
 
 cap.release()
