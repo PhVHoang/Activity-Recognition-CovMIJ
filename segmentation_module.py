@@ -23,10 +23,6 @@ def make_subtracted_mean(image_path, image_list):
         subtracted_means = np.asarray(subtracted_means)
         filtered_mean = gaussian_filter(subtracted_means, sigma=7)
         np.save('filtered_mean.npy', filtered_mean)
-        # np.save('saved_depth_info.npy', saved_depth_info)
-        # fig = plt.figure(figsize=(16,10))
-        # plt.plot(filtered_mean)
-        # fig.savefig('filtered_mean.jpg')
         return filtered_mean
 
 

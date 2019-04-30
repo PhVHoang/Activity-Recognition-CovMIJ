@@ -1,5 +1,4 @@
 from calculateCovarianceMats import *
-import sklearn
 from sklearn.multiclass import OneVsRestClassifier
 import setting
 
@@ -52,3 +51,19 @@ def get_MIJ_matrices(Ns_list, filename):
     return x, y, z, t
 
 # training...
+def get_covariance_vector(x,y,z,t):
+    fullCovmat, vec_covMat = calculateCovarianceMat(x.T, y.T, z.T, t, nLevels=2, overlap=True, timeVar=False)
+    return vec_covMat
+
+def make_preprocessed_training_data(filenames):
+    X_train, y_train = [], []
+    for i in range(len(filenames)):
+        x, y, z, t = get_MIJ_matrices(filenames[i])
+        vec_covMat = get_covariance_vector(x,y,z,t)
+        label = int(filenames[i][1:3])
+        X_train.append(vec_covMat)
+        y_train.append(label)
+    X_train = np.asarray(X_train)
+    y_train = np.asarray(y_train)
+    return X_train, y_train
+

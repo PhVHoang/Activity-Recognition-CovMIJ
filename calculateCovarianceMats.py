@@ -1,6 +1,7 @@
 from norm import *
 from utils import *
 from MostJoints.getMostInformativeJoints import *
+import numpy as np
 
 
 def calculateCovarianceMat(X, Y, Z, T, nLevels, overlap=False, timeVar=True):
@@ -31,7 +32,7 @@ def calculateCovarianceMat(X, Y, Z, T, nLevels, overlap=False, timeVar=True):
     listIdxMatrix = getValueMatrix(sizeMatrix)  # get half of covariance matrix indexes
 
     for l in range(1, nLevels + 1):
-        # Compute covariance matrices for each level
+        # Compute covariance matrixes for each level
         nofMats = 2 ** (l - 1)
         sizeWindow = 1 / nofMats
         stepWindow = sizeWindow
@@ -55,7 +56,6 @@ def calculateCovarianceMat(X, Y, Z, T, nLevels, overlap=False, timeVar=True):
                 sliceVars = np.concatenate(
                     (np.concatenate((sliceX, sliceY), axis=1), np.concatenate((sliceZ, sliceT), axis=1)), axis=1)
             covarianceMat = np.cov(sliceVars.T)
-            print(covarianceMat.shape)
             fullCovMats[l - 1][i] = covarianceMat
             # Get half of covarianceMat and save it as a vector (1-D matrix)
             one_half_vector = []
@@ -65,6 +65,12 @@ def calculateCovarianceMat(X, Y, Z, T, nLevels, overlap=False, timeVar=True):
                 for column in range(covarianceMat.shape[0]):
                     if mask[row][column] == True:
                         one_half_vector.append(covarianceMat[row][column])
-            covMats[l - 1][i] = one_half_vector
+            covMats[l - 1][i] = np.asarray(one_half_vector)
+        covMats[l - 1] = np.asarray(covMats[l - 1])
 
-    return fullCovMats, covMats
+    covMats = np.asarray(covMats)
+    vec = np.empty(0)
+    for i in range(covMats.shape[0]):
+        for j in range(covMats[i].shape[0]):
+            vec = np.hstack((vec, covMats[i][j]))
+    return fullCovMats, vec
