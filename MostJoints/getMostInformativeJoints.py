@@ -6,8 +6,8 @@ def getIndex(Fk, N):
     This method is equivalent to this bellow formula :
         SMIJ = {{idof(sort(fk), n}}
     """
-    listIndex = Fk.argsort()
-    listIndex = np.flip(listIndex)
+    listIndex = np.argsort(np.argsort(Fk))
+    # listIndex = np.flip(listIndex) // TODO
     listIndex = listIndex[0:N]
     return listIndex
 
@@ -68,7 +68,7 @@ def listVarianceJoints(segmentedMatrixJoints):
     listVariance = np.zeros(0)
     i = 0
     while (i < 60): # 60 = 3*nJoints
-        listVariance = np.append(listVariance, varianceJoints(segmentedMatrixJoints[:, i:i+2]))
+        listVariance = np.append(listVariance, varianceJoints(segmentedMatrixJoints[:, i:i+3]))
         i += 3
     return listVariance
 
@@ -87,14 +87,17 @@ def fucksegmentJoints(matrixJoints, Ns, N):
     return listSegment
 
 
+
 def getMostJoints(X,Y,Z, Ns, N):
     """
+    Note that we don't segment the matrix Joints here so Ns's value is 1 for every test case
+
 
     :param X: x-axis coordinator
     :param Y: y-axis coordinator
     :param Z: z-axis coordinator
-    :param Ns:
-    :param N:
+    :param Ns: (1)
+    :param N: number of joints (20)
     :return:
     """
     matJoints = matrixJoints(X, Y, Z) # aka matrix A of shape (N, 3*nJoints)
