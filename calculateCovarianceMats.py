@@ -45,7 +45,7 @@ def calculateCovarianceMat(X, Y, Z, T, nLevels, overlap=False, timeVar=True):
         for i in range(len(startFrameTimes)):
             startTime = startFrameTimes[i]
             endTime = startFrameTimes[i] + sizeWindow + 2 * np.finfo(float).eps
-            sliceInds = [i for i in range(T.shape[0]) if normT[i] >= startTime and normT[i] < endTime]
+            sliceInds = [j for j in range(T.shape[0]) if normT[j] >= startTime and normT[j] < endTime]
             sliceX = normX[sliceInds, :]
             sliceY = normY[sliceInds, :]
             sliceZ = normZ[sliceInds, :]
@@ -53,8 +53,7 @@ def calculateCovarianceMat(X, Y, Z, T, nLevels, overlap=False, timeVar=True):
             if not timeVar:
                 sliceVars = np.concatenate((np.concatenate((sliceX, sliceY), axis=1), sliceZ), axis=1)
             else:
-                sliceVars = np.concatenate(
-                    (np.concatenate((sliceX, sliceY), axis=1), np.concatenate((sliceZ, sliceT), axis=1)), axis=1)
+                sliceVars = np.concatenate((np.concatenate((sliceX, sliceY), axis=1), np.concatenate((sliceZ, sliceT), axis=1)), axis=1)
             covarianceMat = np.cov(sliceVars.T)
             fullCovMats[l - 1][i] = covarianceMat
             # Get half of covarianceMat and save it as a vector (1-D matrix)

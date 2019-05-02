@@ -2,6 +2,14 @@ from calculateCovarianceMats import *
 from sklearn.multiclass import OneVsRestClassifier
 import setting
 
+def reshape_skeleton(X):
+    noFrames = int(X.shape[0]/setting.NUMBER_OF_JOINTS)
+    reshaped_X = []
+    for i in range(setting.NUMBER_OF_JOINTS):
+        reshaped_X.append([X[j] for j in range(i, X.shape[0], 20)])
+    reshaped_X = np.asarray(reshaped_X)
+    return reshaped_X
+
 def sort_and_keep_indexes(Ns, numOfJoints):
     Ns = sorted(range(len(Ns)), key = Ns.__getitem__)
     Ns = Ns[len(Ns)-numOfJoints:]
@@ -27,8 +35,8 @@ def get_idx_mostJoints_for_each_action(train_mostInformativeJointsList, action_l
     return Ns_4, Ns_8, Ns_12
 
 
-def get_MIJ_matrices(Ns_list, filename):
-    action_label = int(filename[1:3]) - 1
+def get_MIJ_matrices(Ns4_as3_list, filename):
+    action_label = int(filename[1:3])
 
     with open('data/' + filename, 'r') as f:
         skeleton_matrix = [line.rstrip('\n') for line in f]
@@ -41,13 +49,18 @@ def get_MIJ_matrices(Ns_list, filename):
     y = skeleton_matrix[:, 1]
     z = skeleton_matrix[:, 2]
 
-    x = x.reshape(setting.NUMBER_OF_JOINTS, int(skeleton_matrix.shape[0] / setting.NUMBER_OF_JOINTS))
-    y = y.reshape(setting.NUMBER_OF_JOINTS, int(skeleton_matrix.shape[0] / setting.NUMBER_OF_JOINTS))
-    z = z.reshape(setting.NUMBER_OF_JOINTS, int(skeleton_matrix.shape[0] / setting.NUMBER_OF_JOINTS))
-    t = np.arange(1, noFrames + 1)
-    x = x[Ns_list[action_label]]
-    y = y[Ns_list[action_label]]
-    z = z[Ns_list[action_label]]
+    x = reshape_skeleton(x)
+    y = reshape_skeleton(y)
+    z = reshape_skeleton(z)
+    t = np.arange(1, noFrames + 1).T
+    if action_label == 6:
+        x = x[Ns4_as3_list[0]]
+        y = y[Ns4_as3_list[0]]
+        z = z[Ns4_as3_list[0]]
+    else:
+        x = x[Ns4_as3_list[action_label - 13]]
+        y = y[Ns4_as3_list[action_label - 13]]
+        z = z[Ns4_as3_list[action_label - 13]]
     return x, y, z, t
 
 # training...
